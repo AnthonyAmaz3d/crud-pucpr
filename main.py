@@ -8,17 +8,32 @@ while True:
     "(9) Sair.\n")
     
     opcao = input("Informe a opção desejada: ")
-
-    if opcao == "1" or opcao =="2" or opcao == "3" or opcao == "4" or opcao == "5":
-        print(f"Você escolheu a opção: {opcao}")
+    
+    if opcao == "9":
+        print("\nFinalizando aplicação...\n")
+        break
+    else:
         while True:
-            print("\n----- MENU DE OPERAÇÕES -----\n\n"
-                "(1) Incluir.\n"
+            match opcao:
+                case "1":
+                    print("\n----- GERENCIAR ESTUDANTES -----\n")
+                case "2":
+                    print("\n----- GERENCIAR PROFESSORES -----\n")
+                case "3":
+                    print("\n----- GERENCIAR DISCIPLINAS -----\n")
+                case "4":
+                    print("\n----- GERENCIAR TURMAS -----\n")
+                case "5":
+                    print("\n----- GERENCIAR MATRÍCULAS -----\n")
+                case _:
+                    print("Nenhuma opção correspondente, digite novamente\n")
+
+            print("(1) Incluir.\n"
                 "(2) Listar.\n"
                 "(3) Atualizar.\n"
                 "(4) Excluir.\n"
                 "(9) Voltar ao menu principal.\n")
-            
+                
             opcao_secundaria = input("Informe a opção desejada: ")
             
             print(f"Você escolheu a opção: {opcao_secundaria}")
@@ -35,12 +50,7 @@ while True:
                 print("\n===== EXCLUINDO =====\n\n"
                     "Exclusão concluida...")
             elif opcao_secundaria == "9":
-                    print("\n===== VOLTANDO AO MENU PRINCIPAL =====\n")
-                    break
+                print("\n===== VOLTANDO AO MENU PRINCIPAL =====\n")
+                break
             else:
                 print("Opção inválida, digite novamente\n")
-    elif opcao =="9":
-        print("\nFinalizando aplicação...\n")
-        break
-    else: 
-        print("Nenhuma opção correspondente, digite novamente\n")
