@@ -16,9 +16,11 @@ while True:
     estudantes = []
     
     if opcao == 1:
-        print("Você escolheu a opção: Gerenciar Estudantes")
+        opcao_escolhida = "Estudantes"
+        print(f"Você escolheu a opção: Gerenciar {opcao_escolhida}")
+        opcao_escolhida = opcao_escolhida.upper()
         while True:
-            print("\n----- [ESTUDANTES] - MENU DE OPERAÇÕES -----\n\n"
+            print(f"\n----- [{opcao_escolhida}] - MENU DE OPERAÇÕES -----\n\n"
                 "(1) Incluir.\n"
                 "(2) Listar.\n"
                 "(3) Atualizar.\n"
