@@ -1,7 +1,9 @@
-""""
+"""
     Anthony Maia Dolberth
     Superior de Tecnologia em Análise e Desenvolvimento de Sistemas
 """
+
+estudantes = []
 
 while True:
     print("----- MENU PRINCIPAL -----\n\n"
@@ -13,7 +15,6 @@ while True:
     "(9) Sair.\n")
     
     opcao = int(input("Informe a opção desejada: "))
-    estudantes = []
     
     if opcao == 1:
         opcao_escolhida = "Estudantes"
