@@ -31,27 +31,67 @@ while True:
             opcao_secundaria = int(input("Informe a opção desejada: "))
             
             print(f"Você escolheu a opção: {opcao_secundaria}")
+            
             if opcao_secundaria == 1:
                 print("\n===== INCLUSÃO =====\n")
-                estudante = input("Informe o nome do estudante: ")
-                estudantes.append(estudante)
-                print("Inclusão concluída.")
+                while True:
+                    codigo = int(input("Digite o código do estudante: "))
+                    nome = input("Digite o nome do estudante: ")
+                    cpf = (input("Digite o CPF do estudante: "))
+                    novo_estudante = {'Codigo': codigo, 'Nome': nome, 'CPF': cpf}
+                    estudantes.append(novo_estudante)
+
+                    if input("Deseja cadastrar um novo aluno? (s/n) ") == "n":
+                        print("Inclusão concluída.")
+                        break
+            
             elif opcao_secundaria == 2:
                 print("\n===== LISTAGEM =====\n")
-                if estudantes == []:
+                if len(estudantes) == 0:
                     print("Nenhum estudante listado ainda.")
-                for estudante in estudantes:
-                    print("-- " + estudante)
+                else:
+                    for estudante in estudantes:
+                        print(f"-- Código: {estudante['Codigo']}, Nome: {estudante['Nome']}, CPF: {estudante['CPF']}")
                 print("\nListagem concluída.")
+
             elif opcao_secundaria == 3:
-                print("EM DESENVOLVIMENTO")
+                print("\n===== ATUALIZAR =====\n")
+                codigo_estudante_editar = int(input("Qual o código do estudante que você deseja editar? "))
+                estudante_modificar = None
+                
+                for dicionario in estudantes:
+                    if dicionario["Codigo"] == codigo_estudante_editar:
+                        estudante_modificar = dicionario
+                        break
+                if estudante_modificar == None:
+                    print("Nenhum estudante possui o código informado")
+                else:
+                    estudante_modificar["Codigo"] = int(input("Digite o novo código: "))
+                    estudante_modificar["Nome"] = input("Digite o novo nome: ")
+                    estudante_modificar["CPF"] = input("Digite o novo CPF: ")
+            
             elif opcao_secundaria == 4:
-                print("EM DESENVOLVIMENTO")
+                print("\n===== EXCLUIR =====\n")
+                codigo_estudante_excluido = int(input("Qual o código do estudante que você deseja excluir? "))
+                estudante_excluido = None
+                
+                for dicionario in estudantes:
+                    if codigo_estudante_excluido == dicionario["Codigo"]:
+                        estudante_excluido = dicionario
+                        break
+                
+                if estudante_excluido is None:
+                    print("Nenhum estudante possui o código informado")
+                else:
+                    estudantes.remove(estudante_excluido)
+                    print("Estudante removido")
+            
             elif opcao_secundaria == 9:
                 print("\n===== VOLTANDO AO MENU PRINCIPAL =====\n")
                 break
             else:
                 print("Opção inválida, digite novamente\n")
+    
     elif opcao == 2 or opcao == 3 or opcao == 4 or opcao == 5:
         print("EM DESENVOLVIMENTO \n")
     elif opcao == 9:
