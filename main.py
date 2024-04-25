@@ -15,8 +15,9 @@ def menu_principal():
     
     return int(input('Digite a operação que deseja fazer: '))
 
-def menu_de_operacoes():
-    print("\n----- MENU DE OPERAÇÕES -----\n\n"
+def menu_de_operacoes(opcao):
+    opcao = opcao.upper()
+    print(f"\n----- {opcao} MENU DE OPERAÇÕES -----\n\n"
     "(1) Incluir.\n"
     "(2) Listar.\n"
     "(3) Atualizar.\n"
@@ -56,9 +57,9 @@ def atualizar_estudantes(codigo, arquivo):
     print("\n===== ATUALIZAR =====\n")
     item_modificar = None
     
-    for dicionario in lista:
-        if dicionario["Codigo"] == codigo:
-            item_modificar = dicionario
+    for item in lista:
+        if item["Codigo"] == codigo:
+            item_modificar = item
             break
     if item_modificar == None:
         print("Nenhum estudante possui o código informado")
@@ -66,6 +67,7 @@ def atualizar_estudantes(codigo, arquivo):
         item_modificar["Codigo"] = int(input("Digite o novo código: "))
         item_modificar["Nome"] = input("Digite o novo nome: ")
         item_modificar["CPF"] = input("Digite o novo CPF: ")
+        salvar_arquivo(lista, arquivo)
         return
 
 def excluir_estudantes(codigo, arquivo):
@@ -98,7 +100,46 @@ def ler_arquivo(arquivo):
     except:
         return []
 
+def opcao_selecionada(opcao):
+    match opcao:
+        case 1:
+            return 'estudantes'
+        case 2: 
+            return 'professores'
+        case 3: 
+            return 'disciplinas'
+        case 4:
+            return 'turmas'
+        case 5: 
+            return 'matrículas'
+
+def processar_menu_secundario(opcao_secundaria, arquivo):
+    if opcao_secundaria == 1:
+        incluir_estudantes(arquivo)
+    elif opcao_secundaria == 2: 
+        listar_estudantes(arquivo)
+    elif opcao_secundaria == 3:
+        try:
+            codigo = int(input("Qual o código do estudante que você deseja atualizar? "))
+        except:
+            print('Apenas números são permitidos. Digite novamente.')
+            return
+        atualizar_estudantes(codigo, arquivo)
+    elif opcao_secundaria == 4: 
+        try:
+            codigo = int(input("Qual o código do estudante que você deseja excluir? "))
+        except:
+            print('Apenas números são permitidos. Digite novamente.')
+            return
+        excluir_estudantes(codigo, arquivo)
+    elif opcao_secundaria == 9: 
+        print("Voltando para o menu principal")
+        return False
+    return True
+
+
 arquivo_estudante = 'estudantes.json'
+arquivo_professores = 'professores.json'
 
 while True:
     try:
@@ -109,34 +150,23 @@ while True:
     
     if opcao == 1:
         while True:
+            escolha = opcao_selecionada(opcao)
             try:
-                opcao_secundaria = menu_de_operacoes()
+                opcao_secundaria = menu_de_operacoes(escolha)
             except:
                 print('Apenas números são permitidos. Digite novamente.')
                 continue
-            
-            if opcao_secundaria == 1:
-                incluir_estudantes(arquivo_estudante)
-            elif opcao_secundaria == 2: 
-                listar_estudantes(arquivo_estudante)
-            elif opcao_secundaria == 3:
-                try:
-                    codigo = int(input("Qual o código do estudante que você deseja atualizar? "))
-                except:
-                    print('Apenas números são permitidos. Digite novamente.')
-                    continue
-                atualizar_estudantes(codigo, arquivo_estudante)
-            elif opcao_secundaria == 4: 
-                try:
-                    codigo = int(input("Qual o código do estudante que você deseja excluir? "))
-                except:
-                    print('Apenas números são permitidos. Digite novamente.')
-                    continue
-                excluir_estudantes(codigo, arquivo_estudante)
-            elif opcao_secundaria == 9: 
-                print("Voltando para o menu principal")
-                break
-    elif opcao >= 2 and opcao <= 5:
+            processar_menu_secundario(opcao_secundaria, arquivo_estudante )
+    elif opcao == 2:
+        while True:
+            escolha = opcao_selecionada(opcao)
+            try:
+                opcao_secundaria = menu_de_operacoes(escolha)
+            except:
+                print('Apenas números são permitidos. Digite novamente.')
+                continue
+            processar_menu_secundario(opcao_secundaria, arquivo_professores)
+    elif opcao >= 3 and opcao <= 5:
         print('EM DESENVOLVIMENTO')
     elif opcao == 6:
         break 
