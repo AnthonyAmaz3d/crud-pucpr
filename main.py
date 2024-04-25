@@ -2,8 +2,9 @@
     Anthony Maia Dolberth
     Superior de Tecnologia em Análise e Desenvolvimento de Sistemas
 """
+import json
 
-estudantes = []
+arquivo_estudante = "estudantes.json"
 
 def menu_principal():
     print("----- MENU PRINCIPAL -----\n\n"
@@ -39,19 +40,24 @@ def menu_de_operacoes(opcao):
     opcao_secundaria = int(input('Digite a operação que deseja fazer: '))
     return opcao_secundaria
 
-def incluir_estudantes(estudantes):
+def incluir_estudantes(nome_arquivo):
     print("\n===== INCLUSÃO =====\n")
     while True:
         codigo = int(input("Digite o código do estudante: "))
         nome = input("Digite o nome do estudante: ")
         cpf = input("Digite o CPF do estudante: ")
         novo_estudante = {'Codigo': codigo, 'Nome': nome, 'CPF': cpf}
-        estudantes.append(novo_estudante)
+        
         if input("Deseja cadastrar um novo aluno? (s/n) ") == "n":
             print("Inclusão concluída.")
             break
+        
+    estudantes = ler_arquivo(nome_arquivo)
+    estudantes.append(novo_estudante)
+    salvar_arquivos(estudantes, nome_arquivo)
 
-def listagem_estudantes(estudantes):
+def listar_estudantes(nome_arquivo):
+    estudantes = ler_arquivo(nome_arquivo)
     print("\n===== LISTAGEM =====\n")
     if len(estudantes) == 0:
         print("Nenhum estudante listado ainda.")
@@ -60,7 +66,8 @@ def listagem_estudantes(estudantes):
             print(f"-- Código: {estudante['Codigo']}, Nome: {estudante['Nome']}, CPF: {estudante['CPF']}")
         print("\nListagem concluída.")
 
-def atualizacao_estudantes(estudantes):
+def atualizar_estudantes(nome_arquivo):
+    estudantes = ler_arquivo(nome_arquivo)
     print("\n===== ATUALIZAR =====\n")
     codigo_estudante_editar = int(input("Qual o código do estudante que você deseja editar? "))
     estudante_modificar = None
@@ -75,10 +82,16 @@ def atualizacao_estudantes(estudantes):
         estudante_modificar["Codigo"] = int(input("Digite o novo código: "))
         estudante_modificar["Nome"] = input("Digite o novo nome: ")
         estudante_modificar["CPF"] = input("Digite o novo CPF: ")
+        salvar_arquivos(estudantes, "estudantes.json")
+        return
 
-def exclusao_estudantes(estudantes):
+def excluir_estudantes(nome_arquivo):
+    estudantes = ler_arquivo(nome_arquivo)
     print("\n===== EXCLUIR =====\n")
-    codigo_estudante_excluido = int(input("Qual o código do estudante que você deseja excluir? "))
+    try:
+        codigo_estudante_excluido = int(input("Qual o código do estudante que você deseja excluir? "))
+    except:
+        print
     estudante_excluido = None
     
     for dicionario in estudantes:
@@ -91,6 +104,18 @@ def exclusao_estudantes(estudantes):
     else:
         estudantes.remove(estudante_excluido)
         print("Estudante removido")
+        salvar_arquivos(estudantes, "estudantes.json")
+        return
+
+def salvar_arquivos(lista, nome_arquivo):
+    with open (nome_arquivo, 'w') as f:
+        json.dump(lista, f)
+
+def ler_arquivo(nome_arquivo):
+    with open (nome_arquivo, 'r') as f:
+        lista = json.load(f)
+    
+    return lista
 
 while True:
     main = menu_principal()
@@ -101,13 +126,13 @@ while True:
         while True:
             operacao = menu_de_operacoes(main)
             if operacao == 1:
-                incluir_estudantes(estudantes)
+                incluir_estudantes(arquivo_estudante)
             elif operacao == 2: 
-                listagem_estudantes(estudantes)
+                listar_estudantes(arquivo_estudante)
             elif operacao == 3:
-                atualizacao_estudantes(estudantes)
+                atualizar_estudantes(arquivo_estudante)
             elif operacao == 4:
-                exclusao_estudantes(estudantes)
+                excluir_estudantes(arquivo_estudante)
             elif operacao == 9:
                 break
             else:
