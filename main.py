@@ -4,8 +4,6 @@
 """
 import json
 
-arquivo_estudante = "estudantes.json"
-
 def menu_principal():
     print("----- MENU PRINCIPAL -----\n\n"
     "(1) Gerenciar estudantes.\n"
@@ -15,32 +13,19 @@ def menu_principal():
     "(5) Gerenciar matrículas.\n"
     "(9) Sair.\n")
     
-    opcao = int(input('Digite a operação que deseja fazer: '))
+    return int(input('Digite a operação que deseja fazer: '))
 
-    if opcao == 1:
-        return 'estudantes'
-    elif opcao == 2 or opcao == 3 or opcao == 4 or opcao == 5:
-        print('EM DESENVOLVIMENTO')
-        return menu_principal()
-    elif opcao == 9:
-        return 'sair'
-    else:
-        print('Opção inválida, tente novamente')
-        return menu_principal()
-
-def menu_de_operacoes(opcao):
-    opcao = opcao.upper()
-    print(f"\n----- [{opcao}] - MENU DE OPERAÇÕES -----\n\n"
+def menu_de_operacoes():
+    print("\n----- MENU DE OPERAÇÕES -----\n\n"
     "(1) Incluir.\n"
     "(2) Listar.\n"
     "(3) Atualizar.\n"
     "(4) Excluir.\n"
     "(9) Voltar ao menu principal.\n")
     
-    opcao_secundaria = int(input('Digite a operação que deseja fazer: '))
-    return opcao_secundaria
+    return int(input('Digite a operação que deseja fazer: '))
 
-def incluir_estudantes(nome_arquivo):
+def incluir_estudantes(arquivo):
     print("\n===== INCLUSÃO =====\n")
     while True:
         codigo = int(input("Digite o código do estudante: "))
@@ -52,88 +37,108 @@ def incluir_estudantes(nome_arquivo):
             print("Inclusão concluída.")
             break
         
-    estudantes = ler_arquivo(nome_arquivo)
-    estudantes.append(novo_estudante)
-    salvar_arquivos(estudantes, nome_arquivo)
+    lista = ler_arquivo(arquivo)
+    lista.append(novo_estudante)
+    salvar_arquivo(lista, arquivo)
 
-def listar_estudantes(nome_arquivo):
-    estudantes = ler_arquivo(nome_arquivo)
+def listar_estudantes(arquivo):
+    lista = ler_arquivo(arquivo)
     print("\n===== LISTAGEM =====\n")
-    if len(estudantes) == 0:
+    if len(lista) == 0:
         print("Nenhum estudante listado ainda.")
     else:
-        for estudante in estudantes:
-            print(f"-- Código: {estudante['Codigo']}, Nome: {estudante['Nome']}, CPF: {estudante['CPF']}")
+        for item in lista:
+            print(f"-- Código: {item['Codigo']}, Nome: {item['Nome']}, CPF: {item['CPF']}")
         print("\nListagem concluída.")
 
-def atualizar_estudantes(nome_arquivo):
-    estudantes = ler_arquivo(nome_arquivo)
+def atualizar_estudantes(codigo, arquivo):
+    lista = ler_arquivo(arquivo)
     print("\n===== ATUALIZAR =====\n")
-    codigo_estudante_editar = int(input("Qual o código do estudante que você deseja editar? "))
-    estudante_modificar = None
+    item_modificar = None
     
-    for dicionario in estudantes:
-        if dicionario["Codigo"] == codigo_estudante_editar:
-            estudante_modificar = dicionario
+    for dicionario in lista:
+        if dicionario["Codigo"] == codigo:
+            item_modificar = dicionario
             break
-    if estudante_modificar == None:
+    if item_modificar == None:
         print("Nenhum estudante possui o código informado")
     else:
-        estudante_modificar["Codigo"] = int(input("Digite o novo código: "))
-        estudante_modificar["Nome"] = input("Digite o novo nome: ")
-        estudante_modificar["CPF"] = input("Digite o novo CPF: ")
-        salvar_arquivos(estudantes, "estudantes.json")
+        item_modificar["Codigo"] = int(input("Digite o novo código: "))
+        item_modificar["Nome"] = input("Digite o novo nome: ")
+        item_modificar["CPF"] = input("Digite o novo CPF: ")
         return
 
-def excluir_estudantes(nome_arquivo):
-    estudantes = ler_arquivo(nome_arquivo)
+def excluir_estudantes(codigo, arquivo):
+    lista = ler_arquivo(arquivo)
     print("\n===== EXCLUIR =====\n")
-    try:
-        codigo_estudante_excluido = int(input("Qual o código do estudante que você deseja excluir? "))
-    except:
-        print
-    estudante_excluido = None
+    item_excluido = None
     
-    for dicionario in estudantes:
-        if codigo_estudante_excluido == dicionario["Codigo"]:
-            estudante_excluido = dicionario
+    for dicionario in lista:
+        if codigo == dicionario["Codigo"]:
+            item_excluido = dicionario
             break
         
-    if estudante_excluido is None:
+    if item_excluido is None:
         print("Nenhum estudante possui o código informado")
     else:
-        estudantes.remove(estudante_excluido)
+        lista.remove(item_excluido)
+        salvar_arquivo(lista, arquivo)
         print("Estudante removido")
-        salvar_arquivos(estudantes, "estudantes.json")
         return
 
-def salvar_arquivos(lista, nome_arquivo):
-    with open (nome_arquivo, 'w') as f:
+def salvar_arquivo(lista, arquivo):
+    with open (arquivo, 'w') as f:
         json.dump(lista, f)
 
-def ler_arquivo(nome_arquivo):
-    with open (nome_arquivo, 'r') as f:
-        lista = json.load(f)
-    
-    return lista
+def ler_arquivo(arquivo):
+    try:
+        with open(arquivo, 'r') as f:
+            lista = json.load(f)
+        return lista
+    except:
+        return []
+
+arquivo_estudante = 'estudantes.json'
 
 while True:
-    main = menu_principal()
-    if main == 'sair':
-        print(f'Você escolheu a opção {main}, finalizando CRUD')
-        break
-    else:
+    try:
+        opcao = menu_principal()
+    except:
+        print('Apenas números são permitidos. Digite novamente.')
+        continue
+    
+    if opcao == 1:
         while True:
-            operacao = menu_de_operacoes(main)
-            if operacao == 1:
+            try:
+                opcao_secundaria = menu_de_operacoes()
+            except:
+                print('Apenas números são permitidos. Digite novamente.')
+                continue
+            
+            if opcao_secundaria == 1:
                 incluir_estudantes(arquivo_estudante)
-            elif operacao == 2: 
+            elif opcao_secundaria == 2: 
                 listar_estudantes(arquivo_estudante)
-            elif operacao == 3:
-                atualizar_estudantes(arquivo_estudante)
-            elif operacao == 4:
-                excluir_estudantes(arquivo_estudante)
-            elif operacao == 9:
+            elif opcao_secundaria == 3:
+                try:
+                    codigo = int(input("Qual o código do estudante que você deseja atualizar? "))
+                except:
+                    print('Apenas números são permitidos. Digite novamente.')
+                    continue
+                atualizar_estudantes(codigo, arquivo_estudante)
+            elif opcao_secundaria == 4: 
+                try:
+                    codigo = int(input("Qual o código do estudante que você deseja excluir? "))
+                except:
+                    print('Apenas números são permitidos. Digite novamente.')
+                    continue
+                excluir_estudantes(codigo, arquivo_estudante)
+            elif opcao_secundaria == 9: 
+                print("Voltando para o menu principal")
                 break
-            else:
-                print('Opção inválida, tente novamente')
+    elif opcao >= 2 and opcao <= 5:
+        print('EM DESENVOLVIMENTO')
+    elif opcao == 6:
+        break 
+    else:
+        print('Opção inválida, digite novamente')
