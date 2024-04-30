@@ -30,7 +30,11 @@ def incluir_estudantes_ou_professores(arquivo, opcao):
     opcao_selecionada(opcao)
     print(f"\n===== INCLUSÃO DE {opcao.upper()} =====\n")
     while True:
-        codigo = int(input(f"Digite o código do {opcao}: "))
+        try:
+            codigo = int(input(f"Digite o código do {opcao}: "))
+        except:
+            print("Apenas números são válidos.")
+            continue
         nome = input(f"Digite o nome do {opcao}: ")
         cpf = input(f"Digite o CPF do {opcao}: ")
         novo_cadastro = {'Codigo': codigo, 'Nome': nome, 'CPF': cpf}
@@ -43,13 +47,38 @@ def incluir_estudantes_ou_professores(arquivo, opcao):
     lista.append(novo_cadastro)
     salvar_arquivo(lista, arquivo)
 
-def incluir_matricula_ou_turma(arquivo, opcao):
+def incluir_turma(arquivo, opcao):
     opcao_selecionada(opcao)
     print(f"\n===== INCLUSÃO DE {opcao.upper()} =====\n")
     while True:
-        codigo = int(input(f"Digite o código do {opcao}: "))
-        numero = input(f"Digite o número da {opcao}: ")
-        novo_cadastro = {'Codigo': codigo, 'Numero': numero}
+        try:
+            codigo_turma = int(input(f"Digite o código da {opcao}: "))
+            codigo_professor = int(input(f"Digite o código do professor da {opcao}: "))
+            codigo_disciplina = int(input(f"Digite o código da disciplina da {opcao}: "))
+        except:
+            print("Apenas números são válidos.")
+            continue
+        novo_cadastro = {'Codigo': codigo_turma, 'Codigo_professor': codigo_professor, 'Codigo_disciplina': codigo_disciplina}
+        
+        if input("Deseja realizar outro cadastro? (s/n) ") == "n":
+            print("Inclusão concluída.")
+            break
+        
+    lista = ler_arquivo(arquivo)
+    lista.append(novo_cadastro)
+    salvar_arquivo(lista, arquivo)
+
+def incluir_matricula(arquivo, opcao):
+    opcao_selecionada(opcao)
+    print(f"\n===== INCLUSÃO DE {opcao.upper()} =====\n")
+    while True:
+        try:
+            codigo_matricula = int(input(f"Digite o código do/a {opcao}: "))
+            codigo_estudante = int(input(f"Digite o código do estudante da {opcao}: "))
+        except:
+            print("Apenas números são válidos.")
+            continue
+        novo_cadastro = {'Codigo': codigo_matricula, 'Codigo_estudante': codigo_estudante}
         
         if input("Deseja realizar outro cadastro? (s/n) ") == "n":
             print("Inclusão concluída.")
@@ -63,7 +92,11 @@ def incluir_disciplina(arquivo, opcao):
     opcao_selecionada(opcao)
     print(f"\n===== INCLUSÃO DE {opcao.upper()} =====\n")
     while True:
-        codigo = int(input(f"Digite o código do {opcao}: "))
+        try:
+            codigo = int(input(f"Digite o código da {opcao}: "))
+        except:
+            print("Apenas números são válidos.")
+            continue
         nome = input(f"Digite o nome da {opcao}: ")
         novo_cadastro = {'Codigo': codigo, 'Nome': nome}
         
@@ -86,7 +119,7 @@ def listar_estudantes_ou_professores(arquivo, opcao):
             print(f"-- Código: {item['Codigo']}, Nome: {item['Nome']}, CPF: {item['CPF']}")
         print("\nListagem concluída.")
 
-def listar_matricula_ou_turma(arquivo, opcao):
+def listar_matricula(arquivo, opcao):
     opcao_selecionada(opcao)
     lista = ler_arquivo(arquivo)
     print(f"\n===== LISTAGEM DE {opcao.upper()} =====\n")
@@ -94,7 +127,18 @@ def listar_matricula_ou_turma(arquivo, opcao):
         print(f"Nenhum/a {opcao} listado/a ainda.")
     else:
         for item in lista:
-            print(f"-- Código: {item['Codigo']}, Numero: {item['Numero']}")
+            print(f"-- Código da matrícula: {item['Codigo']}, Código do estudante: {item['Codigo_estudante']}")
+        print("\nListagem concluída.")
+
+def listar_turma(arquivo, opcao):
+    opcao_selecionada(opcao)
+    lista = ler_arquivo(arquivo)
+    print(f"\n===== LISTAGEM DE {opcao.upper()} =====\n")
+    if len(lista) == 0:
+        print(f"Nenhum/a {opcao} listado/a ainda.")
+    else:
+        for item in lista:
+            print(f"-- Código da turma: {item['Codigo']}, Código do professor: {item['Codigo_professor']}, Código da disciplina: {item['Codigo_disciplina']}")
         print("\nListagem concluída.")
 
 def listar_discplina(arquivo, opcao):
@@ -127,7 +171,7 @@ def atualizar_estudantes_ou_professores(codigo, arquivo, opcao):
         salvar_arquivo(lista, arquivo)
         return
 
-def atualizar_matricula_ou_turma(codigo, arquivo, opcao):
+def atualizar_matricula(codigo, arquivo, opcao):
     opcao_selecionada(opcao)
     lista = ler_arquivo(arquivo)
     print(f"\n===== ATUALIZAR {opcao.upper()} =====\n")
@@ -140,8 +184,27 @@ def atualizar_matricula_ou_turma(codigo, arquivo, opcao):
     if item_modificar == None:
         print("Nenhum cadastro possui o código informado")
     else:
-        item_modificar["Codigo"] = int(input("Digite o novo código: "))
-        item_modificar["Numero"] = input("Digite o novo número: ")
+        item_modificar["Codigo"] = int(input("Digite o novo código da matrícula: "))
+        item_modificar["Codigo_estudante"] = int(input("Digite o novo código do estudante: "))
+        salvar_arquivo(lista, arquivo)
+        return
+
+def atualizar_turma(codigo, arquivo, opcao):
+    opcao_selecionada(opcao)
+    lista = ler_arquivo(arquivo)
+    print(f"\n===== ATUALIZAR {opcao.upper()} =====\n")
+    item_modificar = None
+    
+    for item in lista:
+        if item["Codigo"] == codigo:
+            item_modificar = item
+            break
+    if item_modificar == None:
+        print("Nenhum cadastro possui o código informado")
+    else:
+        item_modificar["Codigo"] = int(input("Digite o novo código da turma: "))
+        item_modificar["Codigo_professor"] = int(input("Digite o novo código do professor: "))
+        item_modificar["Codigo_disciplina"] = int(input("Digite o novo código da disciplina: "))
         salvar_arquivo(lista, arquivo)
         return
 
@@ -211,16 +274,20 @@ def processar_menu_secundario(opcao_secundaria, arquivo, opcao, opcao2):
     if opcao_secundaria == 1:
         if opcao2 == 1 or opcao2 == 2:
             incluir_estudantes_ou_professores(arquivo, opcao)
-        elif opcao2 == 4 or opcao2 == 5:
-            incluir_matricula_ou_turma(arquivo, opcao)
+        elif opcao2 == 4:
+            incluir_turma(arquivo, opcao)
+        elif opcao2 == 5:
+            incluir_matricula(arquivo, opcao)
         else:
             incluir_disciplina(arquivo, opcao)
 
     elif opcao_secundaria == 2: 
         if opcao2 == 1 or opcao2 == 2:
             listar_estudantes_ou_professores(arquivo, opcao)
-        elif opcao2 == 4 or opcao2 == 5:
-            listar_matricula_ou_turma(arquivo, opcao)
+        elif opcao2 == 4:
+            listar_turma(arquivo, opcao)
+        elif opcao2 == 5:
+            listar_matricula(arquivo, opcao)
         else:
             listar_discplina(arquivo, opcao)
 
@@ -232,8 +299,10 @@ def processar_menu_secundario(opcao_secundaria, arquivo, opcao, opcao2):
             return
         if opcao2 == 1 or opcao2 == 2:
             atualizar_estudantes_ou_professores(codigo, arquivo, opcao)
-        elif opcao2 == 4 or opcao2 == 5:
-            atualizar_matricula_ou_turma(codigo, arquivo, opcao)
+        elif opcao2 == 4:
+            atualizar_turma(codigo, arquivo, opcao)
+        elif opcao2 == 5:
+            atualizar_matricula(codigo, arquivo, opcao)
         else: 
             atualizar_disciplina(codigo, arquivo, opcao)
 
@@ -275,7 +344,7 @@ while True:
                 continue
             if not processar_menu_secundario(opcao_secundaria, arquivo_estudante, escolha, segunda_opcao):
                 break
-
+    
     elif opcao == 2:
         segunda_opcao = 2
         while True:
