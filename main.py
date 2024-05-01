@@ -27,6 +27,7 @@ def menu_de_operacoes(opcao):
     return int(input('Digite a operação que deseja fazer: '))
 
 def incluir_estudantes_ou_professores(arquivo, opcao):
+    lista = ler_arquivo(arquivo)
     opcao_selecionada(opcao)
     print(f"\n===== INCLUSÃO DE {opcao.upper()} =====\n")
     while True:
@@ -35,45 +36,57 @@ def incluir_estudantes_ou_professores(arquivo, opcao):
         except:
             print("Apenas números são válidos.")
             continue
+        for item in lista:
+            if item['Codigo'] == codigo:
+                print('Esse código ja existe, tente novamente')
+                return incluir_estudantes_ou_professores(arquivo, opcao)
         nome = input(f"Digite o nome do {opcao}: ")
         cpf = input(f"Digite o CPF do {opcao}: ")
         novo_cadastro = {'Codigo': codigo, 'Nome': nome, 'CPF': cpf}
-        
         if input("Deseja cadastrar uma nova pessoa? (s/n) ") == "n":
             print("Inclusão concluída.")
             break
         
-    lista = ler_arquivo(arquivo)
     lista.append(novo_cadastro)
     salvar_arquivo(lista, arquivo)
 
 def incluir_turma(arquivo, opcao):
+    lista = ler_arquivo(arquivo)
     opcao_selecionada(opcao)
     print(f"\n===== INCLUSÃO DE {opcao.upper()} =====\n")
     while True:
         try:
             codigo_turma = int(input(f"Digite o código da {opcao}: "))
+            for item in lista:
+                if item['Codigo'] == codigo_turma:
+                    print('Esse código ja existe, tente novamente')
+                    return incluir_turma(arquivo, opcao)
             codigo_professor = int(input(f"Digite o código do professor da {opcao}: "))
             codigo_disciplina = int(input(f"Digite o código da disciplina da {opcao}: "))
         except:
             print("Apenas números são válidos.")
             continue
+        
         novo_cadastro = {'Codigo': codigo_turma, 'Codigo_professor': codigo_professor, 'Codigo_disciplina': codigo_disciplina}
         
         if input("Deseja realizar outro cadastro? (s/n) ") == "n":
             print("Inclusão concluída.")
             break
         
-    lista = ler_arquivo(arquivo)
     lista.append(novo_cadastro)
     salvar_arquivo(lista, arquivo)
 
 def incluir_matricula(arquivo, opcao):
+    lista = ler_arquivo(arquivo)
     opcao_selecionada(opcao)
     print(f"\n===== INCLUSÃO DE {opcao.upper()} =====\n")
     while True:
         try:
             codigo_matricula = int(input(f"Digite o código do/a {opcao}: "))
+            for item in lista:
+                if item['Codigo'] == codigo_matricula:
+                    print('Esse código ja existe, tente novamente')
+                    return incluir_matricula(arquivo, opcao)
             codigo_estudante = int(input(f"Digite o código do estudante da {opcao}: "))
         except:
             print("Apenas números são válidos.")
@@ -84,7 +97,6 @@ def incluir_matricula(arquivo, opcao):
             print("Inclusão concluída.")
             break
         
-    lista = ler_arquivo(arquivo)
     lista.append(novo_cadastro)
     salvar_arquivo(lista, arquivo)
 
@@ -94,6 +106,10 @@ def incluir_disciplina(arquivo, opcao):
     while True:
         try:
             codigo = int(input(f"Digite o código da {opcao}: "))
+            for item in lista:
+                if item['Codigo'] == codigo:
+                    print('Esse código ja existe, tente novamente')
+                    return incluir_turma(arquivo, opcao)
         except:
             print("Apenas números são válidos.")
             continue
@@ -318,7 +334,6 @@ def processar_menu_secundario(opcao_secundaria, arquivo, opcao, opcao2):
         print("Voltando para o menu principal")
         return False
     return True
-
 
 arquivo_estudante = 'estudantes.json'
 arquivo_professor = 'professores.json'
