@@ -5,7 +5,7 @@
 import json
 
 def menu_principal():
-    print("----- MENU PRINCIPAL -----\n\n"
+    print("===== MENU PRINCIPAL =====\n\n"
     "(1) Gerenciar estudantes.\n"
     "(2) Gerenciar professores.\n"
     "(3) Gerenciar disciplinas.\n"
@@ -17,14 +17,14 @@ def menu_principal():
 
 def menu_de_operacoes(opcao):
     opcao = opcao.upper()
-    print(f"\n----- [{opcao}] MENU DE OPERAÇÕES -----\n\n"
+    print(f"\n===== [{opcao}] MENU DE OPERAÇÕES =====\n\n"
     "(1) Incluir.\n"
     "(2) Listar.\n"
     "(3) Atualizar.\n"
     "(4) Excluir.\n"
     "(9) Voltar ao menu principal.\n")
     
-    return int(input('Digite a operação que deseja fazer: '))
+    return int(input('Digite a operação que deseja realizar: '))
 
 def incluir_estudantes_ou_professores(arquivo, opcao):
     lista = ler_arquivo(arquivo)
@@ -172,18 +172,22 @@ def atualizar_estudantes_ou_professores(codigo, arquivo, opcao):
     opcao_selecionada(opcao)
     lista = ler_arquivo(arquivo)
     print(f"\n===== ATUALIZAR {opcao.upper()} =====\n")
-    item_modificar = None
+    item_atualizar = None
     
     for item in lista:
-        if item["Codigo"] == codigo:
-            item_modificar = item
+        if codigo == item["Codigo"]:
+            item_atualizar = item
             break
-    if item_modificar == None:
+    if item_atualizar == None:
         print("Nenhum cadastro possui o código informado")
     else:
-        item_modificar["Codigo"] = int(input("Digite o novo código: "))
-        item_modificar["Nome"] = input("Digite o novo nome: ")
-        item_modificar["CPF"] = input("Digite o novo CPF: ")
+        try:
+            item_atualizar["Codigo"] = int(input("Digite o novo código: "))
+        except:
+            print("Apenas números são permitido, tente novamente:")
+            return atualizar_estudantes_ou_professores(codigo, arquivo, opcao)
+        item_atualizar["Nome"] = input("Digite o novo nome: ")
+        item_atualizar["CPF"] = input("Digite o novo CPF: ")
         salvar_arquivo(lista, arquivo)
         return
 
@@ -191,36 +195,45 @@ def atualizar_matricula(codigo, arquivo, opcao):
     opcao_selecionada(opcao)
     lista = ler_arquivo(arquivo)
     print(f"\n===== ATUALIZAR {opcao.upper()} =====\n")
-    item_modificar = None
+    item_atualizar = None
     
     for item in lista:
         if item["Codigo"] == codigo:
-            item_modificar = item
+            item_atualizar = item
             break
-    if item_modificar == None:
-        print("Nenhum cadastro possui o código informado")
+        
+    if item_atualizar == None:
+            print("Nenhum cadastro possui o código informado")
     else:
-        item_modificar["Codigo"] = int(input("Digite o novo código da matrícula: "))
-        item_modificar["Codigo_estudante"] = int(input("Digite o novo código do estudante: "))
+        try:
+            item_atualizar["Codigo"] = int(input("Digite o novo código da matrícula: "))
+            item_atualizar["Codigo_estudante"] = int(input("Digite o novo código do estudante: "))
+        except:
+            print("Apenas números são permitido, tente novamente: ")
+            return atualizar_matricula(codigo, arquivo, opcao)
         salvar_arquivo(lista, arquivo)
-        return
+
 
 def atualizar_turma(codigo, arquivo, opcao):
     opcao_selecionada(opcao)
     lista = ler_arquivo(arquivo)
     print(f"\n===== ATUALIZAR {opcao.upper()} =====\n")
-    item_modificar = None
+    item_atualizar = None
     
     for item in lista:
         if item["Codigo"] == codigo:
-            item_modificar = item
+            item_atualizar = item
             break
-    if item_modificar == None:
+    if item_atualizar == None:
         print("Nenhum cadastro possui o código informado")
     else:
-        item_modificar["Codigo"] = int(input("Digite o novo código da turma: "))
-        item_modificar["Codigo_professor"] = int(input("Digite o novo código do professor: "))
-        item_modificar["Codigo_disciplina"] = int(input("Digite o novo código da disciplina: "))
+        try: 
+            item_atualizar["Codigo"] = int(input("Digite o novo código da turma: "))
+            item_atualizar["Codigo_professor"] = int(input("Digite o novo código do professor: "))
+            item_atualizar["Codigo_disciplina"] = int(input("Digite o novo código da disciplina: "))
+        except:
+            print("Apenas números são permitido, tente novamente: ")
+            return atualizar_turma(codigo, arquivo, opcao)
         salvar_arquivo(lista, arquivo)
         return
 
@@ -228,17 +241,21 @@ def atualizar_disciplina(codigo, arquivo, opcao):
     opcao_selecionada(opcao)
     lista = ler_arquivo(arquivo)
     print(f"\n===== ATUALIZAR {opcao.upper()} =====\n")
-    item_modificar = None
+    item_atualizar = None
     
     for item in lista:
         if item["Codigo"] == codigo:
-            item_modificar = item
+            item_atualizar = item
             break
-    if item_modificar == None:
+    if item_atualizar == None:
         print("Nenhum cadastro possui o código informado")
     else:
-        item_modificar["Codigo"] = int(input("Digite o novo código: "))
-        item_modificar["Nome"] = input("Digite o novo nome: ")
+        try: 
+            item_atualizar["Codigo"] = int(input("Digite o novo código: "))
+        except: 
+            print("Apenas números são permitido, tente novamente: ")
+            return atualizar_disciplina(codigo, arquivo, opcao)
+        item_atualizar["Nome"] = input("Digite o novo nome: ")
         salvar_arquivo(lista, arquivo)
         return
 
@@ -273,19 +290,6 @@ def ler_arquivo(arquivo):
     except:
         return []
 
-def opcao_selecionada(opcao):
-    match opcao:
-        case 1:
-            return 'estudante'
-        case 2: 
-            return 'professor'
-        case 3: 
-            return 'disciplina'
-        case 4:
-            return 'turma'
-        case 5: 
-            return 'matrícula'
-
 def processar_menu_secundario(opcao_secundaria, arquivo, opcao, opcao2):
     if opcao_secundaria == 1:
         if opcao2 == 1 or opcao2 == 2:
@@ -312,7 +316,7 @@ def processar_menu_secundario(opcao_secundaria, arquivo, opcao, opcao2):
             codigo = int(input(f"Qual o código do {opcao} que você deseja atualizar? "))
         except:
             print('Apenas números são permitidos. Digite novamente.')
-            return
+            return processar_menu_secundario(opcao_secundaria, arquivo, opcao, opcao2)
         if opcao2 == 1 or opcao2 == 2:
             atualizar_estudantes_ou_professores(codigo, arquivo, opcao)
         elif opcao2 == 4:
@@ -327,13 +331,26 @@ def processar_menu_secundario(opcao_secundaria, arquivo, opcao, opcao2):
             codigo = int(input(f"Qual o código do {opcao} que você deseja excluir? "))
         except:
             print('Apenas números são permitidos. Digite novamente.')
-            return
+            return processar_menu_secundario(opcao_secundaria, arquivo, opcao, opcao2)
         excluir_cadastro(codigo, arquivo, opcao)
 
     elif opcao_secundaria == 9: 
         print("Voltando para o menu principal")
         return False
     return True
+
+def opcao_selecionada(opcao):
+    match opcao:
+        case 1:
+            return 'estudante'
+        case 2: 
+            return 'professor'
+        case 3: 
+            return 'disciplina'
+        case 4:
+            return 'turma'
+        case 5: 
+            return 'matrícula'
 
 arquivo_estudante = 'estudantes.json'
 arquivo_professor = 'professores.json'
