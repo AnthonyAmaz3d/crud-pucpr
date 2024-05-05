@@ -102,17 +102,18 @@ def incluir_matricula(arquivo, opcao):
 
 def incluir_disciplina(arquivo, opcao):
     opcao_selecionada(opcao)
+    lista = ler_arquivo(arquivo)
     print(f"\n===== INCLUSÃO DE {opcao.upper()} =====\n")
     while True:
         try:
             codigo = int(input(f"Digite o código da {opcao}: "))
-            for item in lista:
-                if item['Codigo'] == codigo:
-                    print('Esse código ja existe, tente novamente')
-                    return incluir_turma(arquivo, opcao)
         except:
             print("Apenas números são válidos.")
             continue
+        for item in lista:
+                if item['Codigo'] == codigo:
+                    print('Esse código ja existe, tente novamente')
+                    return incluir_turma(arquivo, opcao)
         nome = input(f"Digite o nome da {opcao}: ")
         novo_cadastro = {'Codigo': codigo, 'Nome': nome}
         
@@ -120,7 +121,6 @@ def incluir_disciplina(arquivo, opcao):
             print("Inclusão concluída.")
             break
         
-    lista = ler_arquivo(arquivo)
     lista.append(novo_cadastro)
     salvar_arquivo(lista, arquivo)
 
