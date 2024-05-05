@@ -33,13 +33,14 @@ def incluir_estudantes_ou_professores(arquivo, opcao):
     while True:
         try:
             codigo = int(input(f"Digite o código do {opcao}: "))
+            for item in lista:
+                if item['Codigo'] == codigo:
+                    print('Esse código ja existe, tente novamente')
+                    return incluir_estudantes_ou_professores(arquivo, opcao)
         except:
             print("Apenas números são válidos.")
             continue
-        for item in lista:
-            if item['Codigo'] == codigo:
-                print('Esse código ja existe, tente novamente')
-                return incluir_estudantes_ou_professores(arquivo, opcao)
+        
         nome = input(f"Digite o nome do {opcao}: ")
         cpf = input(f"Digite o CPF do {opcao}: ")
         novo_cadastro = {'Codigo': codigo, 'Nome': nome, 'CPF': cpf}
@@ -96,7 +97,6 @@ def incluir_matricula(arquivo, opcao):
         if input("Deseja realizar outro cadastro? (s/n) ") == "n":
             print("Inclusão concluída.")
             break
-        
     lista.append(novo_cadastro)
     salvar_arquivo(lista, arquivo)
 
@@ -107,13 +107,13 @@ def incluir_disciplina(arquivo, opcao):
     while True:
         try:
             codigo = int(input(f"Digite o código da {opcao}: "))
+            for item in lista:
+                if item['Codigo'] == codigo:
+                    print('Esse código ja existe, tente novamente')
+                    return incluir_disciplina(arquivo, opcao)
         except:
             print("Apenas números são válidos.")
             continue
-        for item in lista:
-                if item['Codigo'] == codigo:
-                    print('Esse código ja existe, tente novamente')
-                    return incluir_turma(arquivo, opcao)
         nome = input(f"Digite o nome da {opcao}: ")
         novo_cadastro = {'Codigo': codigo, 'Nome': nome}
         
