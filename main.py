@@ -47,6 +47,10 @@ def incluir_estudantes_ou_professores(arquivo, opcao):
         if input("Deseja cadastrar uma nova pessoa? (s/n) ") == "n":
             print("Inclusão concluída.")
             break
+        else:
+            lista.append(novo_cadastro)
+            salvar_arquivo(lista, arquivo)
+            return incluir_estudantes_ou_professores(arquivo, opcao)
         
     lista.append(novo_cadastro)
     salvar_arquivo(lista, arquivo)
@@ -73,6 +77,10 @@ def incluir_turma(arquivo, opcao):
         if input("Deseja realizar outro cadastro? (s/n) ") == "n":
             print("Inclusão concluída.")
             break
+        else:
+            lista.append(novo_cadastro)
+            salvar_arquivo(lista, arquivo)
+            return incluir_turma(arquivo, opcao)
         
     lista.append(novo_cadastro)
     salvar_arquivo(lista, arquivo)
@@ -97,6 +105,11 @@ def incluir_matricula(arquivo, opcao):
         if input("Deseja realizar outro cadastro? (s/n) ") == "n":
             print("Inclusão concluída.")
             break
+        else:
+            lista.append(novo_cadastro)
+            salvar_arquivo(lista, arquivo)
+            return incluir_matricula(arquivo, opcao)
+        
     lista.append(novo_cadastro)
     salvar_arquivo(lista, arquivo)
 
@@ -120,6 +133,10 @@ def incluir_disciplina(arquivo, opcao):
         if input("Deseja realizar outro cadastro? (s/n) ") == "n":
             print("Inclusão concluída.")
             break
+        else:
+            lista.append(novo_cadastro)
+            salvar_arquivo(lista, arquivo)
+            return incluir_disciplina(arquivo, opcao)
         
     lista.append(novo_cadastro)
     salvar_arquivo(lista, arquivo)
